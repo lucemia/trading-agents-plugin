@@ -119,6 +119,39 @@ def fetch_news(ticker: str, as_of: date) -> dict:
     }
 
 
+def fetch_macro(as_of: date) -> dict:
+    # Pull news from broad market proxies to get global macro context
+    macro_tickers = {
+        "^GSPC": "S&P 500",
+        "^TNX": "10Y Treasury Yield",
+        "GC=F": "Gold Futures",
+        "CL=F": "Crude Oil Futures",
+    }
+    items = []
+    seen = set()
+    for sym, label in macro_tickers.items():
+        try:
+            news = yf.Ticker(sym).news or []
+            for n in news[:5]:
+                title = n.get("content", {}).get("title", n.get("title", ""))
+                if title and title not in seen:
+                    seen.add(title)
+                    items.append({
+                        "source": label,
+                        "title": title,
+                        "summary": n.get("content", {}).get("summary", ""),
+                        "publisher": n.get("content", {}).get("provider", {}).get("displayName", ""),
+                    })
+        except Exception:
+            continue
+
+    return {
+        "as_of": as_of.isoformat(),
+        "macro_news_count": len(items),
+        "items": items[:20],
+    }
+
+
 def fetch_fundamentals(ticker: str, as_of: date) -> dict:
     tk = yf.Ticker(ticker)
     info = tk.info or {}
@@ -145,7 +178,7 @@ def fetch_fundamentals(ticker: str, as_of: date) -> dict:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ticker", required=True)
-    parser.add_argument("--type", required=True, choices=["technical", "news", "fundamentals"])
+    parser.add_argument("--type", required=True, choices=["technical", "news", "fundamentals", "macro"])
     parser.add_argument("--date", default=date.today().isoformat())
     args = parser.parse_args()
 
@@ -154,6 +187,7 @@ def main():
         "technical": fetch_technical,
         "news": fetch_news,
         "fundamentals": fetch_fundamentals,
+        "macro": lambda ticker, as_of: fetch_macro(as_of),
     }
 
     try:
