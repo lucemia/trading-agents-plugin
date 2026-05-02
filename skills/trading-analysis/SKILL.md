@@ -1,3 +1,8 @@
+---
+name: trading-analysis
+description: Multi-agent trading analysis for a stock ticker. Runs technical, news, fundamentals, and macro analysts in parallel, then an adversarial bull/bear debate, then Research Manager, Trader, and Portfolio Manager to produce a final BUY/SELL/HOLD decision with entry, stop, and sizing.
+---
+
 Extract the ticker symbol from $ARGUMENTS (e.g. "NVDA"). If no ticker is provided, ask the user for one before proceeding.
 
 Set TODAY to the current date in YYYY-MM-DD format.

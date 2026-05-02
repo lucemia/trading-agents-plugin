@@ -2,12 +2,10 @@
   "name": "claude-trading-agents",
   "version": "1.0.0",
   "description": "Multi-agent trading analysis pipeline — technical, news, fundamentals, macro, adversarial bull/bear debate, and a final BUY/SELL/HOLD decision. Powered by yfinance, no external LLM API cost.",
-  "author": "lucemia",
+  "author": {
+    "name": "lucemia",
+    "url": "https://github.com/lucemia"
+  },
   "license": "MIT",
-  "repository": "https://github.com/lucemia/claude-trading-agents",
-  "skills": ["trading-analysis"],
-  "requirements": {
-    "python": ">=3.10",
-    "packages": ["yfinance", "pandas"]
-  }
+  "repository": "https://github.com/lucemia/claude-trading-agents"
 }
